@@ -21,6 +21,7 @@ public class UserController
     UserRepo userRepo;
     @Autowired
     HistoryRepo historyRepo;
+
     @PostMapping("/register")
     public String register(@RequestBody User user)
     {
@@ -49,6 +50,7 @@ public class UserController
         }
         return String.valueOf(user.getId());
     }
+
     @GetMapping("/get-details/{id}")
     public DisplayDto display(@PathVariable int id)
     {
@@ -58,6 +60,7 @@ public class UserController
         displayDto.setBalance(user.getBalance());
         return displayDto;
     }
+
     @PostMapping("/update")
     public String update(@RequestBody UpdateDto obj)
     {
@@ -90,6 +93,7 @@ public class UserController
         userRepo.save(user);
         return"Update Successful";
     }
+
     @PostMapping("/add/{adminId}")
     public String add(@RequestBody User user,@PathVariable int adminId)
     {
@@ -114,11 +118,13 @@ public class UserController
         }
         return userRepo.findAllByRole("customer",sort);
     }
+
     @GetMapping("/users/{keyword}")
     public List<User> getUsers(@PathVariable String keyword)
     {
         return userRepo.findByUsernameContainingIgnoreCaseAndRole(keyword,"customer");
     }
+
     @DeleteMapping("/delete-user/{userId}/admin/{adminId}")
     public String deleteUser(@PathVariable int userId,@PathVariable int adminId)
     {

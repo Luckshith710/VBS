@@ -5,428 +5,242 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Banking System - Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            min-height: 100vh; padding: 20px;
         }
-
         .container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
+            width: 100%; max-width: 960px; margin: 0 auto;
+            background: white; border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden;
         }
-
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 25px 30px; color: white;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .header-left h1 {
-            font-size: 28px;
-            margin-bottom: 5px;
-        }
-
-        .header-left p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-
+        .header-left h1 { font-size: 26px; margin-bottom: 3px; }
+        .header-left p  { font-size: 13px; opacity: 0.9; }
         .logout-btn {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+            padding: 9px 20px; background: rgba(255,255,255,0.2); color: white;
+            border: 2px solid white; border-radius: 8px; cursor: pointer;
+            font-weight: 600; transition: all 0.3s;
         }
+        .logout-btn:hover { background: white; color: #667eea; }
+        .content { padding: 30px; }
+        .dashboard-header { text-align: center; margin-bottom: 22px; }
+        .dashboard-header h2 { color: #333; font-size: 22px; margin-bottom: 5px; }
+        .dashboard-header p  { color: #999; font-size: 13px; }
 
-        .logout-btn:hover {
-            background: white;
-            color: #667eea;
-        }
-
-        .content {
-            padding: 40px 30px;
-        }
-
-        .dashboard-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .dashboard-header h2 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .user-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-
-        .user-info p {
-            color: #666;
-            margin: 8px 0;
-            font-size: 14px;
-        }
-
-        .user-info strong {
-            color: #333;
-        }
-
+        /* Balance card */
         .account-balance {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 30px;
+            color: white; padding: 25px 30px; border-radius: 14px;
+            text-align: center; margin-bottom: 14px;
         }
+        .account-balance p { font-size: 13px; opacity: 0.9; margin-bottom: 8px; }
+        .balance-amount { font-size: 38px; font-weight: 700; }
 
-        .account-balance p {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 10px;
+        /* Loan banner */
+        .loan-banner {
+            display: none; border-radius: 12px; padding: 14px 20px;
+            margin-bottom: 16px; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 10px;
+            animation: fadeIn 0.4s ease;
         }
+        .loan-banner.visible  { display: flex; }
+        .loan-banner.pending  { background: #fff8e1; border: 1.5px solid #ffc107; }
+        .loan-banner.active   { background: #e8f5e9; border: 1.5px solid #43e97b; }
+        .loan-banner.rejected { background: #fde8e8; border: 1.5px solid #f5576c; }
+        .loan-banner.closed   { background: #f5f5f5; border: 1.5px solid #aaa; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
 
-        .balance-amount {
-            font-size: 36px;
-            font-weight: bold;
+        .banner-left { display: flex; align-items: center; gap: 12px; }
+        .banner-icon { font-size: 28px; }
+        .banner-text .title { font-weight: 700; font-size: 14px; color: #333; }
+        .banner-text .sub   { font-size: 12px; color: #666; margin-top: 2px; }
+        .banner-stats { display: flex; gap: 20px; }
+        .bstat .bl { font-size: 11px; color: #888; }
+        .bstat .bv { font-size: 15px; font-weight: 700; color: #333; }
+        .banner-badge {
+            padding: 5px 14px; border-radius: 20px; font-size: 11px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
         }
+        .badge-pending  { background: #fff3cd; color: #856404; }
+        .badge-active   { background: #d4f8e8; color: #0a5c36; }
+        .badge-rejected { background: #fde0e5; color: #a71d2a; }
+        .badge-closed   { background: #e0e0e0; color: #555; }
 
-        .transaction-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 40px;
+        /* ── ONE LINE action bar ── */
+        .action-bar {
+            display: flex; gap: 10px; margin-bottom: 10px;
+            overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;
         }
-
-        .btn {
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
+        .action-bar::-webkit-scrollbar { display: none; }
+        .act-btn {
+            flex: 1; min-width: 0;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            padding: 14px 10px; border: none; border-radius: 12px; cursor: pointer;
+            font-weight: 700; font-size: 11px; color: white; transition: all 0.25s;
+            position: relative; white-space: nowrap;
         }
-
-        .btn-withdraw {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
+        .act-btn .icon { font-size: 22px; line-height: 1; }
+        .act-btn:hover { transform: translateY(-3px); }
+        .btn-withdraw { background: linear-gradient(135deg,#f093fb,#f5576c); }
+        .btn-withdraw:hover { box-shadow: 0 6px 18px rgba(245,87,108,0.4); }
+        .btn-deposit  { background: linear-gradient(135deg,#4facfe,#00f2fe); }
+        .btn-deposit:hover  { box-shadow: 0 6px 18px rgba(79,172,254,0.4); }
+        .btn-transfer { background: linear-gradient(135deg,#43e97b,#38f9d7); }
+        .btn-transfer:hover { box-shadow: 0 6px 18px rgba(67,233,123,0.4); }
+        .btn-passbook { background: linear-gradient(135deg,#667eea,#764ba2); }
+        .btn-passbook:hover { box-shadow: 0 6px 18px rgba(102,126,234,0.45); }
+        .btn-update   { background: linear-gradient(135deg,#a18cd1,#fbc2eb); }
+        .btn-update:hover { box-shadow: 0 6px 18px rgba(161,140,209,0.4); }
+        .btn-loan     { background: linear-gradient(135deg,#f7971e,#ffd200); color: #333 !important; }
+        .btn-loan:hover { box-shadow: 0 6px 18px rgba(255,210,0,0.5); }
+        .pulse-dot {
+            position: absolute; top: 7px; right: 7px;
+            width: 8px; height: 8px; background: #f5576c;
+            border-radius: 50%; animation: pulse 1.5s infinite; display: none;
         }
+        @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.5);opacity:0.5} }
 
-        .btn-withdraw:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
-        }
+        /* Message */
+        .message { padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:14px; display:none; }
+        .message.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+        .message.error   { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+        .message.show    { display:block; }
 
-        .btn-deposit {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-        }
-
-        .btn-deposit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
-        }
-
-        .btn-transfer {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-        }
-
-        .btn-transfer:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 233, 123, 0.4);
-        }
-
-        .btn-icon {
-            font-size: 24px;
-        }
-
-        .transactions-section {
-            background: #f8f9fa;
-            padding: 30px;
-            border-radius: 12px;
-        }
-
-        .transactions-section h3 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-
-        .transaction-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid #667eea;
-        }
-
-        .transaction-info p {
-            margin: 3px 0;
-            font-size: 14px;
-        }
-
-        .transaction-info .type {
-            color: #333;
-            font-weight: 600;
-        }
-
-        .transaction-info .date {
-            color: #999;
-            font-size: 12px;
-        }
-
-        .transaction-amount {
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .transaction-amount.debit {
-            color: #f5576c;
-        }
-
-        .transaction-amount.credit {
-            color: #43e97b;
-        }
-
+        /* Modals */
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
+            display:none; position:fixed; z-index:1000;
+            left:0; top:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.5); align-items:center; justify-content:center;
         }
-
-        .modal.show {
-            display: flex;
-        }
-
+        .modal.show { display:flex; }
         .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background:white; padding:28px; border-radius:14px;
+            width:90%; max-width:420px;
+            box-shadow:0 20px 60px rgba(0,0,0,0.3);
+            max-height:90vh; overflow-y:auto;
         }
+        .modal-content.wide { max-width:520px; }
+        .modal-header { font-size:19px; font-weight:700; color:#333; margin-bottom:4px; }
+        .modal-sub    { font-size:13px; color:#999; margin-bottom:20px; }
 
-        .modal-header {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 20px;
+        /* Loan tabs */
+        .loan-tabs {
+            display:flex; gap:4px; background:#f0f0f0; padding:4px;
+            border-radius:10px; margin-bottom:18px;
         }
-
-        .form-group {
-            margin-bottom: 20px;
+        .ltab {
+            flex:1; padding:8px 4px; border:none; border-radius:7px;
+            background:transparent; color:#888; font-weight:600;
+            font-size:13px; cursor:pointer; transition:all 0.25s;
         }
+        .ltab.active { background:white; color:#667eea; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+        .ltab-content { display:none; }
+        .ltab-content.active { display:block; }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
+        /* Type chips */
+        .type-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+        .type-chip {
+            padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700;
+            cursor:pointer; border:2px solid transparent; transition:all 0.2s;
         }
+        .chip-personal   { background:#d4e7ff; color:#4facfe; }
+        .chip-home       { background:#d4f8e8; color:#0a7c4f; }
+        .chip-education  { background:#fff3cd; color:#b07800; }
+        .chip-vehicle    { background:#fde0e5; color:#c0002a; }
+        .type-chip.selected { border-color:currentColor; transform:scale(1.06); }
 
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
+        /* Calc box */
+        .calc-box {
+            background:linear-gradient(135deg,#f7971e0f,#ffd2000f);
+            border:1px solid #ffd20040; border-radius:10px;
+            padding:14px; margin-bottom:14px; display:none;
         }
+        .calc-box h4 { font-size:11px; color:#999; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
+        .calc-row { display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; }
+        .calc-row span:first-child { color:#777; }
+        .calc-row span:last-child  { font-weight:600; color:#333; }
+        .calc-row.big { border-top:1px solid #ffd20060; padding-top:8px; margin-top:4px; }
+        .calc-row.big span:last-child { color:#f7971e; font-size:15px; }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
+        /* Req note */
+        .req-note {
+            font-size:12px; color:#666; background:#fffde7;
+            border-radius:8px; padding:10px 12px; margin-bottom:14px;
+            border-left:3px solid #ffd200;
         }
+        .req-note strong { color:#b07800; }
 
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
+        /* Repay box */
+        .repay-box {
+            background:#f0fff4; border:1px solid #43e97b50;
+            border-radius:10px; padding:14px; margin-bottom:14px; display:none;
         }
+        .repay-box h4 { font-size:11px; color:#999; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
 
-        .btn-modal {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+        /* Loan item */
+        .loan-item {
+            background:#f8f9fa; border-radius:10px; padding:14px;
+            margin-bottom:10px; border-left:4px solid #667eea; transition:background 0.2s;
         }
-
-        .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .loan-item:hover { background:#f0f2ff; }
+        .loan-item.st-pending  { border-left-color:#ffc107; }
+        .loan-item.st-active   { border-left-color:#43e97b; }
+        .loan-item.st-rejected { border-left-color:#f5576c; }
+        .loan-item.st-closed   { border-left-color:#aaa; }
+        .li-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:7px; }
+        .li-amount { font-size:17px; font-weight:700; color:#333; }
+        .status-pill {
+            padding:3px 10px; border-radius:20px; font-size:11px;
+            font-weight:700; text-transform:uppercase; letter-spacing:.4px;
         }
+        .pill-pending  { background:#fff3cd; color:#856404; }
+        .pill-active   { background:#d4f8e8; color:#0a5c36; }
+        .pill-rejected { background:#fde0e5; color:#a71d2a; }
+        .pill-closed   { background:#e0e0e0; color:#555; }
+        .li-meta { display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:#888; }
+        .li-purpose { font-size:12px; color:#aaa; margin-top:5px; }
 
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        /* Forms */
+        .form-group { margin-bottom:16px; }
+        .form-group label { display:block; margin-bottom:6px; color:#333; font-weight:500; font-size:13px; }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width:100%; padding:11px 14px; border:2px solid #e0e0e0;
+            border-radius:8px; font-size:14px; transition:border-color 0.3s; font-family:inherit;
         }
+        .form-group textarea { resize:vertical; min-height:60px; }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus { outline:none; border-color:#667eea; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 
-        .btn-cancel {
-            background: #f0f0f0;
-            color: #333;
-        }
+        /* Modal buttons */
+        .modal-btns { display:flex; gap:10px; justify-content:flex-end; margin-top:6px; }
+        .mbtn { padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:600; transition:all 0.3s; }
+        .mbtn-cancel  { background:#f0f0f0; color:#333; }
+        .mbtn-cancel:hover { background:#e0e0e0; }
+        .mbtn-primary { background:linear-gradient(135deg,#667eea,#764ba2); color:white; flex:1; }
+        .mbtn-primary:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(102,126,234,0.4); }
+        .mbtn-loan    { background:linear-gradient(135deg,#f7971e,#ffd200); color:#333; flex:1; font-weight:700; }
+        .mbtn-loan:hover { box-shadow:0 5px 15px rgba(255,210,0,0.4); }
 
-        .btn-cancel:hover {
-            background: #e0e0e0;
-        }
+        .empty-state { text-align:center; padding:30px 20px; color:#ccc; }
+        .empty-state .ei { font-size:36px; margin-bottom:10px; }
+        .empty-state p { font-size:14px; }
 
-        .message {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .message.show {
-            display: block;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #999;
-            padding: 20px;
-        }
-        .btn-action {
-    color: white;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.btn-action:hover {
-    transform: translateY(-2px);
-}
-
-.btn-passbook {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.btn-passbook:hover {
-    box-shadow: 0 6px 18px rgba(102, 126, 234, 0.45);
-}
-
-
-        @media (max-width: 600px) {
-            .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-
-            .transaction-buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .transaction-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .transaction-amount {
-                align-self: flex-end;
-            }
-            btn-action {
-                color: white;
-                font-weight: 600;
-                border-radius: 8px;
-                transition: all 0.3s ease;
-            }
-
-            .btn-action:hover {
-                transform: translateY(-2px);
-            }
-            .btn-withdraw {
-                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            }
-
-            .btn-withdraw:hover {
-                box-shadow: 0 6px 18px rgba(245, 87, 108, 0.4);
-            }
-
-            .btn-deposit {
-                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            }
-
-            .btn-deposit:hover {
-                box-shadow: 0 6px 18px rgba(79, 172, 254, 0.4);
-            }
-
-            .btn-transfer {
-                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            }
-
-            .btn-transfer:hover {
-                box-shadow: 0 6px 18px rgba(67, 233, 123, 0.4);
-            }
-
-            .btn-passbook {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            }
-
-            .btn-passbook:hover {
-                box-shadow: 0 6px 18px rgba(102, 126, 234, 0.45);
-            }
-
-
+        @media(max-width:600px){
+            .header{flex-direction:column;gap:12px;text-align:center;}
+            .act-btn{font-size:10px;padding:12px 6px;}
+            .form-row{grid-template-columns:1fr;}
+            .banner-stats{display:none;}
         }
     </style>
 </head>
@@ -439,9 +253,7 @@
         </div>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
-
     <div class="content">
-
         <div class="dashboard-header">
             <h2 id="welcomeText">Welcome</h2>
             <p>User ID: <strong><span id="userId">-</span></strong></p>
@@ -454,70 +266,107 @@
             <div class="balance-amount">₹ <span id="balance">0.00</span></div>
         </div>
 
-        <div class="transaction-buttons">
-            <button class="btn btn-action btn-withdraw" onclick="openWithdrawModal()">
-                Withdraw
+        <!-- Loan status banner -->
+        <div class="loan-banner" id="loanBanner">
+            <div class="banner-left">
+                <div class="banner-icon" id="bannerIcon">🏦</div>
+                <div class="banner-text">
+                    <div class="title" id="bannerTitle">Loan</div>
+                    <div class="sub"   id="bannerSub">—</div>
+                </div>
+            </div>
+            <div class="banner-stats" id="bannerStats"></div>
+            <span class="banner-badge" id="bannerBadge">—</span>
+        </div>
+
+        <!-- ══ ONE LINE BUTTONS ══ -->
+        <div class="action-bar">
+            <button class="act-btn btn-withdraw" onclick="openModal('withdrawModal')">
+                <span class="icon">💸</span>Withdraw
             </button>
-
-            <button class="btn btn-action btn-deposit" onclick="openDepositModal()">
-                Deposit
+            <button class="act-btn btn-deposit" onclick="openModal('depositModal')">
+                <span class="icon">📥</span>Deposit
             </button>
-
-            <button class="btn btn-action btn-transfer" onclick="openTransferModal()">
-                Transfer
+            <button class="act-btn btn-transfer" onclick="openModal('transferModal')">
+                <span class="icon">🔁</span>Transfer
             </button>
-
-            <button class="btn btn-action btn-passbook" onclick="goToPassbook()">
-                Passbook
+            <button class="act-btn btn-passbook" onclick="goToPassbook()">
+                <span class="icon">📖</span>Passbook
             </button>
-
-            <button class="btn btn-action btn-passbook" onclick="openUpdateModal()">
-                Update Profile
+            <button class="act-btn btn-update" onclick="openModal('updateModal')">
+                <span class="icon">✏️</span>Profile
             </button>
-
-
+            <button class="act-btn btn-loan" onclick="openLoanModal()">
+                <span class="pulse-dot" id="loanPulse"></span>
+                <span class="icon">🏦</span>Loan
+            </button>
         </div>
     </div>
 </div>
 
-
+<!-- WITHDRAW -->
 <div id="withdrawModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">Withdraw Funds</div>
+        <div class="modal-sub">Enter amount to withdraw from your account</div>
         <form id="withdrawForm">
             <div class="form-group">
-                <label>Amount</label>
-                <input type="number" id="withdrawAmount" step="0.01" min="0" required>
+                <label>Amount (₹)</label>
+                <input type="number" id="withdrawAmount" step="0.01" min="0" required placeholder="e.g. 1000">
             </div>
-
-            <div class="modal-buttons">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeWithdrawModal()">Cancel</button>
-                <button type="submit" class="btn-modal btn-submit">Withdraw</button>
+            <div class="modal-btns">
+                <button type="button" class="mbtn mbtn-cancel" onclick="closeModal('withdrawModal')">Cancel</button>
+                <button type="submit" class="mbtn mbtn-primary">Withdraw</button>
             </div>
         </form>
     </div>
 </div>
 
-
+<!-- DEPOSIT -->
 <div id="depositModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">Deposit Funds</div>
+        <div class="modal-sub">Add money to your account</div>
         <form id="depositForm">
             <div class="form-group">
-                <label>Amount</label>
-                <input type="number" id="depositAmount" step="0.01" min="0" required>
+                <label>Amount (₹)</label>
+                <input type="number" id="depositAmount" step="0.01" min="0" required placeholder="e.g. 5000">
             </div>
-
-            <div class="modal-buttons">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeDepositModal()">Cancel</button>
-                <button type="submit" class="btn-modal btn-submit">Deposit</button>
+            <div class="modal-btns">
+                <button type="button" class="mbtn mbtn-cancel" onclick="closeModal('depositModal')">Cancel</button>
+                <button type="submit" class="mbtn mbtn-primary">Deposit</button>
             </div>
         </form>
     </div>
 </div>
+
+<!-- TRANSFER -->
+<div id="transferModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">Transfer Funds</div>
+        <div class="modal-sub">Send money to another VBS user</div>
+        <form id="transferForm">
+            <div class="form-group">
+                <label>Recipient Username</label>
+                <input type="text" id="transferUsername" required placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label>Amount (₹)</label>
+                <input type="number" id="transferAmount" step="0.01" min="0" required placeholder="e.g. 500">
+            </div>
+            <div class="modal-btns">
+                <button type="button" class="mbtn mbtn-cancel" onclick="closeModal('transferModal')">Cancel</button>
+                <button type="submit" class="mbtn mbtn-primary">Send Money</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- UPDATE PROFILE -->
 <div id="updateModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">Update Profile</div>
+        <div class="modal-sub">Change your account information</div>
         <form id="updateForm">
             <div class="form-group">
                 <label>Field</label>
@@ -529,305 +378,444 @@
             </div>
             <div class="form-group">
                 <label>New Value</label>
-                <input type="text" id="updateValue" required>
+                <input type="text" id="updateValue" required placeholder="Enter new value">
             </div>
-            <div class="modal-buttons">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeUpdateModal()">Cancel</button>
-                <button type="submit" class="btn-modal btn-submit">Update</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="transferModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">Transfer Funds</div>
-        <form id="transferForm">
-            <div class="form-group">
-                <label>Recipient Username</label>
-                <input type="text" id="transferUsername" required>
-            </div>
-            <div class="form-group">
-                <label>Amount</label>
-                <input type="number" id="transferAmount" step="0.01" min="0" required>
-            </div>
-            <div class="modal-buttons">
-                <button type="button" class="btn-modal btn-cancel" onclick="closeTransferModal()">Cancel</button>
-                <button type="submit" class="btn-modal btn-submit">Send</button>
+            <div class="modal-btns">
+                <button type="button" class="mbtn mbtn-cancel" onclick="closeModal('updateModal')">Cancel</button>
+                <button type="submit" class="mbtn mbtn-primary">Update</button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- LOAN MODAL -->
+<div id="loanModal" class="modal">
+    <div class="modal-content wide">
+        <div class="modal-header">🏦 Loan Centre</div>
+        <div class="modal-sub">Apply for a loan or manage existing ones</div>
+
+        <div class="loan-tabs">
+            <button class="ltab active" onclick="switchTab('apply',this)">Apply</button>
+            <button class="ltab" onclick="switchTab('myloans',this)">My Loans</button>
+            <button class="ltab" onclick="switchTab('repay',this)">Repay</button>
+        </div>
+
+        <!-- APPLY TAB -->
+        <div id="ltab-apply" class="ltab-content active">
+            <div class="req-note">
+                💡 You qualify if you meet <strong>either</strong> condition:<br>
+                &nbsp;• Have at least <strong>10% of the loan amount</strong> in your balance, <strong>OR</strong><br>
+                &nbsp;• Have <strong>3 or more transactions</strong> on your account (active user)<br>
+                <br>Your balance: <strong>₹<span id="reqBal">0</span></strong>
+                &nbsp;→&nbsp; 10% max: <strong>₹<span id="reqMax">0</span></strong>
+            </div>
+            <form id="loanApplyForm">
+                <div class="form-group">
+                    <label>Select Loan Type</label>
+                    <div class="type-chips">
+                        <span class="type-chip chip-personal selected" onclick="pickType('Personal',12,this)">Personal 12%</span>
+                        <span class="type-chip chip-home"      onclick="pickType('Home',8,this)">Home 8%</span>
+                        <span class="type-chip chip-education" onclick="pickType('Education',9,this)">Education 9%</span>
+                        <span class="type-chip chip-vehicle"   onclick="pickType('Vehicle',10,this)">Vehicle 10%</span>
+                    </div>
+                    <input type="hidden" id="loanType" value="Personal">
+                    <input type="hidden" id="loanRate" value="12">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Loan Amount (₹)</label>
+                        <input type="number" id="loanAmount" min="1000" step="500"
+                               placeholder="e.g. 50000" required oninput="recalc()">
+                    </div>
+                    <div class="form-group">
+                        <label>Tenure</label>
+                        <select id="loanTenure" onchange="recalc()">
+                            <option value="6">6 Months</option>
+                            <option value="12" selected>12 Months</option>
+                            <option value="24">24 Months</option>
+                            <option value="36">36 Months</option>
+                            <option value="60">60 Months</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Purpose / Reason</label>
+                    <textarea id="loanPurpose" placeholder="Briefly describe the purpose..." required></textarea>
+                </div>
+                <div class="calc-box" id="calcBox">
+                    <h4>📊 EMI Estimate</h4>
+                    <div class="calc-row"><span>Principal</span><span id="cP">₹0</span></div>
+                    <div class="calc-row"><span>Rate</span><span id="cR">0% p.a.</span></div>
+                    <div class="calc-row"><span>Tenure</span><span id="cT">0 months</span></div>
+                    <div class="calc-row"><span>Total Interest</span><span id="cI">₹0</span></div>
+                    <div class="calc-row big"><span>Monthly EMI</span><span id="cE">₹0</span></div>
+                    <div class="calc-row big"><span>Total Payable</span><span id="cTP">₹0</span></div>
+                </div>
+                <div class="modal-btns">
+                    <button type="button" class="mbtn mbtn-cancel" onclick="closeModal('loanModal')">Cancel</button>
+                    <button type="submit" class="mbtn mbtn-loan">Submit Application 🏦</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- MY LOANS TAB -->
+        <div id="ltab-myloans" class="ltab-content">
+            <div id="myLoansContainer">
+                <div class="empty-state"><div class="ei">⏳</div><p>Loading…</p></div>
+            </div>
+            <div class="modal-btns" style="margin-top:10px;">
+                <button class="mbtn mbtn-cancel" onclick="closeModal('loanModal')">Close</button>
+            </div>
+        </div>
+
+        <!-- REPAY TAB -->
+        <div id="ltab-repay" class="ltab-content">
+            <form id="repayForm">
+                <div class="form-group">
+                    <label>Select Active Loan</label>
+                    <select id="repaySelect">
+                        <option value="">-- Select Loan --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Repayment Amount (₹)</label>
+                    <input type="number" id="repayAmt" min="1" step="1" placeholder="Enter amount" required>
+                </div>
+                <div class="repay-box" id="repayBox">
+                    <h4>💳 Repayment Preview</h4>
+                    <div class="calc-row"><span>Outstanding</span><span id="rOut">₹0</span></div>
+                    <div class="calc-row"><span>After Repayment</span><span id="rAfter">₹0</span></div>
+                </div>
+                <div class="modal-btns">
+                    <button type="button" class="mbtn mbtn-cancel" onclick="closeModal('loanModal')">Cancel</button>
+                    <button type="submit" class="mbtn mbtn-primary">Repay Now ✅</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
-    const API_URL = 'http://localhost:8081';
-    let userId = null;
-    let role = 'customer';
-    function getUserIdFromURL() {
-        const params = new URLSearchParams(window.location.search);
-        userId = params.get('id');
-        role = params.get('role') || 'customer';
+    const API = 'http://localhost:8081';
+    let userId = null, role = 'customer', currentBalance = 0;
 
-        if (!userId) {
-            window.location.href = 'login.html';
-        }
+    function validateUserAccess() {
+        const sid = localStorage.getItem('userId');
+        const sr  = localStorage.getItem('role') || 'customer';
+        const urlId = new URLSearchParams(window.location.search).get('id');
+        if (!sid) { location.href = 'login.html'; return; }
+        if (urlId && urlId !== sid) { alert('Unauthorized!'); location.href = 'login.html'; return; }
+        userId = sid; role = sr;
+        window.history.replaceState({}, '', 'dashboard.html');
     }
 
     async function loadDashboard() {
         document.getElementById('userId').textContent = userId;
+        try {
+            const res  = await fetch(`${API}/get-details/${userId}`);
+            const data = await res.json();
+            document.getElementById('welcomeText').textContent = `Welcome, ${data.username}`;
+            document.getElementById('balance').textContent = data.balance.toFixed(2);
+            currentBalance = data.balance;
+            document.getElementById('reqBal').textContent = data.balance.toFixed(2);
+            document.getElementById('reqMax').textContent = (data.balance * 10).toFixed(2);
+        } catch { showMsg('dashMessage','Failed to load dashboard','error'); }
+        await loadLoanBanner();
+    }
+
+    async function loadLoanBanner() {
+        try {
+            const res   = await fetch(`${API}/loan/user/${userId}`);
+            const loans = await res.json();
+            const loan  = [...loans].sort((a,b) => b.id - a.id)[0];
+            const banner = document.getElementById('loanBanner');
+            if (!loan) { banner.classList.remove('visible'); return; }
+
+            banner.className = `loan-banner visible ${loan.status}`;
+            const icons  = {pending:'⏳',active:'✅',rejected:'❌',closed:'🔒'};
+            const titles = {pending:'Loan Application Pending — Awaiting Admin Approval',
+                            active:'Active Loan',rejected:'Loan Application Rejected',closed:'Loan Closed'};
+            document.getElementById('bannerIcon').textContent  = icons[loan.status]  || '🏦';
+            document.getElementById('bannerTitle').textContent = titles[loan.status] || 'Loan';
+            document.getElementById('bannerSub').textContent   = `${loan.type} Loan • ₹${loan.amount.toLocaleString('en-IN')} • ${loan.tenure} months`;
+            const badge = document.getElementById('bannerBadge');
+            badge.textContent = loan.status.toUpperCase();
+            badge.className   = `banner-badge badge-${loan.status}`;
+
+            const stats = document.getElementById('bannerStats');
+            stats.innerHTML = loan.status === 'active' ? `
+                <div class="bstat"><div class="bl">Monthly EMI</div><div class="bv">₹${Math.round(loan.emi).toLocaleString('en-IN')}</div></div>
+                <div class="bstat"><div class="bl">Remaining</div><div class="bv">₹${Math.round(loan.remaining).toLocaleString('en-IN')}</div></div>` : '';
+
+            document.getElementById('loanPulse').style.display = loan.status === 'pending' ? 'block' : 'none';
+        } catch {}
+    }
+
+    /* ── Modals ── */
+    function openModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+    function openLoanModal() {
+        document.getElementById('reqBal').textContent = currentBalance.toFixed(2);
+        document.getElementById('reqMax').textContent = (currentBalance * 10).toFixed(2);
+        openModal('loanModal');
+        recalc();
+    }
+
+    /* ── Loan tabs ── */
+    function switchTab(name, el) {
+        document.querySelectorAll('.ltab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.ltab-content').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('ltab-' + name).classList.add('active');
+        if (name === 'myloans') renderMyLoans();
+        if (name === 'repay')   populateRepay();
+    }
+
+    /* ── Loan type ── */
+    function pickType(type, rate, el) {
+        document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('loanType').value = type;
+        document.getElementById('loanRate').value = rate;
+        recalc();
+    }
+
+    /* ── EMI Calculator ── */
+    function calcEMI(P, r, n) {
+        const rm = (r / 100) / 12;
+        if (rm === 0) return P / n;
+        return P * rm * Math.pow(1+rm,n) / (Math.pow(1+rm,n)-1);
+    }
+    function recalc() {
+        const P = parseFloat(document.getElementById('loanAmount').value);
+        const n = parseInt(document.getElementById('loanTenure').value);
+        const r = parseFloat(document.getElementById('loanRate').value);
+        const box = document.getElementById('calcBox');
+        if (!P || P <= 0) { box.style.display='none'; return; }
+        box.style.display = 'block';
+        const e = calcEMI(P, r, n);
+        const total = e * n;
+        document.getElementById('cP').textContent  = '₹' + P.toLocaleString('en-IN');
+        document.getElementById('cR').textContent  = r + '% p.a.';
+        document.getElementById('cT').textContent  = n + ' months';
+        document.getElementById('cI').textContent  = '₹' + Math.round(total - P).toLocaleString('en-IN');
+        document.getElementById('cE').textContent  = '₹' + Math.round(e).toLocaleString('en-IN');
+        document.getElementById('cTP').textContent = '₹' + Math.round(total).toLocaleString('en-IN');
+    }
+
+    /* ── Apply ── */
+    document.getElementById('loanApplyForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const amount  = parseFloat(document.getElementById('loanAmount').value);
+        const tenure  = parseInt(document.getElementById('loanTenure').value);
+        const type    = document.getElementById('loanType').value;
+        const rate    = parseFloat(document.getElementById('loanRate').value);
+        const purpose = document.getElementById('loanPurpose').value;
+
+        // Active users (3+ transactions) bypass the 10% balance rule
+        let txCount = 0;
+        try {
+            const txRes = await fetch(`${API}/passbook/${userId}`);
+            const txs   = await txRes.json();
+            txCount = Array.isArray(txs) ? txs.length : 0;
+        } catch {}
+
+        const isActiveUser = txCount >= 3;
+        const has10Percent = currentBalance >= amount * 0.10;
+
+        if (!isActiveUser && !has10Percent) {
+            const need = (amount * 0.10).toFixed(2);
+            showMsg('dashMessage',
+                `❌ To qualify you need EITHER: ₹${need} in balance (10% of loan) OR 3+ transactions. ` +
+                `You have ₹${currentBalance.toFixed(2)} balance and ${txCount} transaction(s).`, 'error');
+            closeModal('loanModal');
+            return;
+        }
 
         try {
-            const res = await fetch(`${API_URL}/get-details/${userId}`);
-            const data = await res.json();
-
-            if (document.getElementById('welcomeText')) {
-                document.getElementById('welcomeText').textContent =
-                    `Welcome ${data.username}`;
+            const res    = await fetch(`${API}/loan/apply`, {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({ userId:parseInt(userId), type, amount, rate, tenure, purpose })
+            });
+            const result = await res.text();
+            if (result.startsWith('APPLIED:')) {
+                showMsg('dashMessage','✅ Loan application submitted! Waiting for admin approval.','success');
+                closeModal('loanModal'); loadDashboard();
+            } else if (result.startsWith('INSUFFICIENT_BALANCE:')) {
+                const need = parseFloat(result.split(':')[1]);
+                showMsg('dashMessage',`❌ Need ₹${need.toLocaleString('en-IN')} balance. Deposit more or make more transactions.`,'error');
+                closeModal('loanModal');
+            } else if (result === 'EXISTING_LOAN') {
+                showMsg('dashMessage','⚠️ You already have a pending or active loan.','error');
+                closeModal('loanModal');
+            } else {
+                showMsg('dashMessage', result || 'Application failed','error');
             }
-
-            if (document.getElementById('balance')) {
-                document.getElementById('balance').textContent =
-                    data.balance.toFixed(2);
-            }
-        } catch {
-            showMessage('dashMessage', 'Failed to load dashboard', 'error');
-        }
-    }
-
-    function openWithdrawModal() {
-        document.getElementById('withdrawModal').classList.add('show');
-    }
-
-    function closeWithdrawModal() {
-        document.getElementById('withdrawModal').classList.remove('show');
-        document.getElementById('withdrawForm').reset();
-    }
-
-    function openDepositModal() {
-        document.getElementById('depositModal').classList.add('show');
-    }
-
-    function closeDepositModal() {
-        document.getElementById('depositModal').classList.remove('show');
-        document.getElementById('depositForm').reset();
-    }
-
-    function openTransferModal() {
-        document.getElementById('transferModal').classList.add('show');
-    }
-
-    function closeTransferModal() {
-        document.getElementById('transferModal').classList.remove('show');
-        document.getElementById('transferForm').reset();
-    }
-
-    function showMessage(elementId, message, type) {
-        const messageEl = document.getElementById(elementId);
-        messageEl.textContent = message;
-        messageEl.className = `message ${type} show`;
-        setTimeout(() => {
-            messageEl.classList.remove('show');
-        }, 3000);
-    }
-
-    const withdrawForm = document.getElementById('withdrawForm');
-    if (withdrawForm) {
-        withdrawForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const withdrawData = {
-                id: parseInt(userId),
-                amount: parseFloat(document.getElementById('withdrawAmount').value)
-            };
-
-            try {
-                const response = await fetch(`${API_URL}/withdraw`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(withdrawData)
-                });
-                const result = await response.text();
-
-                if (result && result.toLowerCase().includes('withdrawal')) {
-                    showMessage('dashMessage', 'Withdrawal successful!', 'success');
-                    closeWithdrawModal();
-                    loadDashboard();
-                } else {
-                    showMessage('dashMessage', result || 'Withdrawal failed', 'error');
-                }
-            } catch (error) {
-                showMessage('dashMessage', 'Error processing withdrawal', 'error');
-                console.error(error);
-            }
-        });
-    }
-        function openUpdateModal() {
-           document.getElementById('updateModal').classList.add('show');
-        }
-
-        function closeUpdateModal() {
-            document.getElementById('updateModal').classList.remove('show');
-            document.getElementById('updateForm').reset();
-        }
-
-    const depositForm = document.getElementById('depositForm');
-    if (depositForm) {
-        depositForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const depositData = {
-                id: parseInt(userId),
-                amount: parseFloat(document.getElementById('depositAmount').value)
-            };
-
-            try {
-                const response = await fetch(`${API_URL}/deposit`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(depositData)
-                });
-                const result = await response.text();
-
-                if (result && result.toLowerCase().includes('deposit')) {
-                    showMessage('dashMessage', 'Deposit successful!', 'success');
-                    closeDepositModal();
-                    loadDashboard();
-                } else {
-                    showMessage('dashMessage', result || 'Deposit failed', 'error');
-                }
-            } catch (error) {
-                showMessage('dashMessage', 'Error processing deposit', 'error');
-                console.error(error);
-            }
-        });
-    }
-
-    const transferForm = document.getElementById('transferForm');
-    if (transferForm) {
-        transferForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const transferData = {
-                id: parseInt(userId),
-                amount: parseFloat(document.getElementById('transferAmount').value),
-                username: document.getElementById('transferUsername').value
-            };
-
-            if (!transferData.username) {
-                showMessage('dashMessage', 'Enter recipient username.', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_URL}/transfer`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(transferData)
-                });
-                const result = await response.text();
-
-                if (response.ok && result && result.toLowerCase().includes('successfully')) {
-                    showMessage('dashMessage', 'Transfer successful!', 'success');
-                    closeTransferModal();
-                    loadDashboard();
-                } else {
-                    showMessage('dashMessage', result || 'Transfer failed', 'error');
-                }
-            } catch (error) {
-                showMessage('dashMessage', 'Error processing transfer', 'error');
-                console.error(error);
-            }
-        });
-    }
-
-    function logout() {
-        window.location.href = 'home.html';
-    }
-    function validateUserAccess() {
-    const storedUserId = localStorage.getItem("userId");
-    const storedRole = localStorage.getItem("role") || "customer";
-
-    const params = new URLSearchParams(window.location.search);
-    const urlUserId = params.get("id");
-
-
-    if (!storedUserId) {
-        window.location.href = "login.html";
-        return;
-    }
-
-
-    if (urlUserId && urlUserId !== storedUserId) {
-        alert("Unauthorized access detected!");
-        window.location.href = "login.html";
-        return;
-    }
-
-
-    userId = storedUserId;
-    role = storedRole;
-
-
-    window.history.replaceState({}, document.title, "dashboard.html");
-}
-
-
-    function goToPassbook() {
-        window.location.href =
-            `passbook.html?id=${userId}&role=${encodeURIComponent(role)}`;
-    }
-
-
-   window.addEventListener('DOMContentLoaded', () => {
-    validateUserAccess();
-    loadDashboard();
-});
-
-
-    window.addEventListener('click', (e) => {
-        const withdrawModal = document.getElementById('withdrawModal');
-        const depositModal = document.getElementById('depositModal');
-        const transferModal = document.getElementById('transferModal');
-
-        if (e.target === withdrawModal) withdrawModal.classList.remove('show');
-        if (e.target === depositModal) depositModal.classList.remove('show');
-        if (e.target === transferModal) transferModal.classList.remove('show');
+        } catch { showMsg('dashMessage','Error — check if backend is running.','error'); }
     });
 
-    document.getElementById('updateForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const key = document.getElementById('updateKey').value;
-            const value = document.getElementById('updateValue').value;
-
-            const updateData = {
-                id: parseInt(userId),
-                key: key,
-                value: value
-            };
-
-            try {
-                const response = await fetch(`${API_URL}/update`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updateData)
-                });
-                const result = await response.text();
-                if (response.ok && result && result.toLowerCase().includes('successfully')) {
-                    showMessage('dashMessage', 'Profile updated successfully!', 'success');
-                    closeUpdateModal();
-                    loadDashboard();
-                } else {
-                    showMessage('dashMessage', result || 'Update failed', 'error');
-                }
-            } catch (error) {
-                showMessage('dashMessage', 'Error updating profile', 'error');
-                console.error('Update error:', error);
+    /* ── My Loans ── */
+    async function renderMyLoans() {
+        const c = document.getElementById('myLoansContainer');
+        c.innerHTML = '<div class="empty-state"><div class="ei">⏳</div><p>Loading…</p></div>';
+        try {
+            const res   = await fetch(`${API}/loan/user/${userId}`);
+            const loans = await res.json();
+            if (!loans.length) {
+                c.innerHTML = '<div class="empty-state"><div class="ei">🏦</div><p>No loans yet. Apply above!</p></div>';
+                return;
             }
+            c.innerHTML = [...loans].reverse().map(l => `
+                <div class="loan-item st-${l.status}">
+                    <div class="li-top">
+                        <span class="li-amount">₹${l.amount.toLocaleString('en-IN')}</span>
+                        <span class="status-pill pill-${l.status}">${l.status.toUpperCase()}</span>
+                    </div>
+                    <div class="li-meta">
+                        <span>🏷️ ${l.type}</span>
+                        <span>📈 ${l.rate}%</span>
+                        <span>⏱️ ${l.tenure} mo</span>
+                        <span>💳 EMI ₹${Math.round(l.emi).toLocaleString('en-IN')}</span>
+                        ${l.status==='active'?`<span style="color:#f5576c;">🔴 Due ₹${Math.round(l.remaining).toLocaleString('en-IN')}</span>`:''}
+                    </div>
+                    ${l.purpose?`<div class="li-purpose">📝 ${l.purpose}</div>`:''}
+                </div>`).join('');
+        } catch {
+            c.innerHTML = '<div class="empty-state"><div class="ei">❌</div><p>Failed to load.</p></div>';
+        }
+    }
+
+    /* ── Repay ── */
+    async function populateRepay() {
+        const sel = document.getElementById('repaySelect');
+        sel.innerHTML = '<option value="">-- Select Loan --</option>';
+        try {
+            const res   = await fetch(`${API}/loan/user/${userId}`);
+            const loans = await res.json();
+            loans.filter(l => l.status === 'active').forEach(l => {
+                sel.innerHTML += `<option value="${l.id}">${l.type} Loan — ₹${Math.round(l.remaining).toLocaleString('en-IN')} remaining</option>`;
+            });
+        } catch {}
+    }
+
+    document.getElementById('repaySelect').addEventListener('change', async function() {
+        const box = document.getElementById('repayBox');
+        if (!this.value) { box.style.display='none'; return; }
+        try {
+            const res   = await fetch(`${API}/loan/user/${userId}`);
+            const loans = await res.json();
+            const loan  = loans.find(l => l.id == this.value);
+            if (loan) {
+                box.style.display = 'block';
+                document.getElementById('rOut').textContent   = '₹' + Math.round(loan.remaining).toLocaleString('en-IN');
+                document.getElementById('rAfter').textContent = '₹' + Math.round(loan.remaining).toLocaleString('en-IN');
+            }
+        } catch {}
+    });
+
+    document.getElementById('repayAmt').addEventListener('input', async function() {
+        const lId = document.getElementById('repaySelect').value;
+        if (!lId) return;
+        try {
+            const res   = await fetch(`${API}/loan/user/${userId}`);
+            const loans = await res.json();
+            const loan  = loans.find(l => l.id == lId);
+            if (!loan) return;
+            const after = Math.max(0, loan.remaining - (parseFloat(this.value)||0));
+            document.getElementById('rAfter').textContent = '₹' + Math.round(after).toLocaleString('en-IN');
+        } catch {}
+    });
+
+    document.getElementById('repayForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const lId = document.getElementById('repaySelect').value;
+        const amt  = parseFloat(document.getElementById('repayAmt').value);
+        if (!lId) { showMsg('dashMessage','Please select a loan','error'); return; }
+        try {
+            const res    = await fetch(`${API}/loan/repay/${lId}`, {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({ id:parseInt(userId), amount:amt })
+            });
+            const result = await res.text();
+            if (result.startsWith('CLOSED:')) {
+                showMsg('dashMessage','🎉 Loan fully repaid! Congratulations!','success');
+            } else if (result.startsWith('REPAID:')) {
+                const rem = parseFloat(result.split(':')[1]);
+                showMsg('dashMessage',`✅ Repayment done! Remaining: ₹${rem.toLocaleString('en-IN')}`,'success');
+            } else {
+                showMsg('dashMessage', result||'Repayment failed','error');
+            }
+            closeModal('loanModal'); loadDashboard();
+        } catch { showMsg('dashMessage','Error processing repayment','error'); }
+    });
+
+    /* ── Existing forms ── */
+    document.getElementById('withdrawForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        try {
+            const r = await fetch(`${API}/withdraw`,{method:'POST',headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({id:parseInt(userId),amount:parseFloat(document.getElementById('withdrawAmount').value)})});
+            const t = await r.text();
+            if(t.toLowerCase().includes('withdrawal')){showMsg('dashMessage','Withdrawal successful!','success');closeModal('withdrawModal');loadDashboard();}
+            else showMsg('dashMessage',t||'Failed','error');
+        } catch{showMsg('dashMessage','Error','error');}
+        document.getElementById('withdrawForm').reset();
+    });
+
+    document.getElementById('depositForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        try {
+            const r = await fetch(`${API}/deposit`,{method:'POST',headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({id:parseInt(userId),amount:parseFloat(document.getElementById('depositAmount').value)})});
+            const t = await r.text();
+            if(t.toLowerCase().includes('deposit')){showMsg('dashMessage','Deposit successful!','success');closeModal('depositModal');loadDashboard();}
+            else showMsg('dashMessage',t||'Failed','error');
+        } catch{showMsg('dashMessage','Error','error');}
+        document.getElementById('depositForm').reset();
+    });
+
+    document.getElementById('transferForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        try {
+            const r = await fetch(`${API}/transfer`,{method:'POST',headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({id:parseInt(userId),amount:parseFloat(document.getElementById('transferAmount').value),
+                username:document.getElementById('transferUsername').value})});
+            const t = await r.text();
+            if(t.toLowerCase().includes('successfully')){showMsg('dashMessage','Transfer successful!','success');closeModal('transferModal');loadDashboard();}
+            else showMsg('dashMessage',t||'Failed','error');
+        } catch{showMsg('dashMessage','Error','error');}
+        document.getElementById('transferForm').reset();
+    });
+
+    document.getElementById('updateForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        try {
+            const r = await fetch(`${API}/update`,{method:'POST',headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({id:parseInt(userId),key:document.getElementById('updateKey').value,
+                value:document.getElementById('updateValue').value})});
+            const t = await r.text();
+            if(t.toLowerCase().includes('successful')){showMsg('dashMessage','✅ Profile updated successfully!','success');closeModal('updateModal');loadDashboard();}
+            else showMsg('dashMessage',t||'Update failed','error');
+        } catch{showMsg('dashMessage','Error','error');}
+        document.getElementById('updateForm').reset();
+    });
+
+    function showMsg(id, msg, type) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.className = `message ${type} show`;
+        setTimeout(() => el.classList.remove('show'), 5000);
+    }
+    function logout()      { location.href = 'home.html'; }
+    function goToPassbook(){ location.href = `passbook.html?id=${userId}&role=${encodeURIComponent(role)}`; }
+
+    window.addEventListener('click', e => {
+        ['withdrawModal','depositModal','transferModal','updateModal','loanModal'].forEach(id => {
+            if(e.target===document.getElementById(id)) closeModal(id);
         });
-
+    });
+    window.addEventListener('DOMContentLoaded', () => { validateUserAccess(); loadDashboard(); });
 </script>
-
 </body>
 </html>
